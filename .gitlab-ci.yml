@@ -1,0 +1,17 @@
+stages:
+  - test
+  - deploy
+
+test:
+  stage: test
+  image: python:3.12
+  script:
+    - pip install -r requirements.txt
+    - pytest --maxfail=1 --disable-warnings -q
+
+deploy:
+  stage: deploy
+  script:
+    - ssh user@production_server 'cd /path/to/project && git pull && systemctl restart finance_app.service'
+  only:
+    - main
