@@ -35,8 +35,8 @@ jobs:
     needs: test
     steps:
       - uses: actions/checkout@v3
-      - name: Build Docker image
-        run: docker build -t finance_app:latest .
+      - name: Build Docker image (no cache)
+        run: docker build --no-cache -t finance_app:latest .
 
   deploy:
     runs-on: self-hosted
@@ -46,4 +46,5 @@ jobs:
         run: |
           docker stop finance_app || true
           docker rm finance_app || true
+          docker rmi finance_app:latest || true
           docker run -d --name finance_app -p 8000:8000 finance_app:latest
