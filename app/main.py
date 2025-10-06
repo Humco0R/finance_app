@@ -9,7 +9,7 @@ def main():
     calc.add_income(500)
     calc.add_expense(300)
 
-    print("==== Finance Calculator! ====")
+    print("==== Finance Calculator!!! ====")
     print(f"Current balance: {calc.get_balance()}")
 
 if __name__ == "__main__":
