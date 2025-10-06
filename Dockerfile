@@ -14,4 +14,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Команда, которая будет запускаться при старте контейнера
-CMD ["python3", "app/main.py"]
+CMD ["python3", "-m", "app.main"]
