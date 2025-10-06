@@ -15,4 +15,4 @@ class FinanceCalculator:
     def get_balance(self):
         income = sum(a for t, a in self.transactions if t == "income")
         expense = sum(a for t, a in self.transactions if t == "expense")
-        return income - expense
+        return income - expense  # <- эта строка
