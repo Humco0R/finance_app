@@ -28,7 +28,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: Deploy app locally
         run: |
-          cd ~/finance_app
+          cd /home/vboxuser/finance_app
           git pull
           pkill -f main.py || true
           nohup python3 app/main.py &
