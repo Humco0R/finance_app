@@ -38,9 +38,10 @@ jobs:
     needs: test
     steps:
       - uses: actions/checkout@v3
-      - name: Build Docker image (no cache, always new)
+      - name: Build Docker image (no cache)
         run: |
           docker builder prune -f || true
+          docker system prune -af || true
           docker build --no-cache -t finance_app:latest .
 
   # ---------- Деплой ----------
