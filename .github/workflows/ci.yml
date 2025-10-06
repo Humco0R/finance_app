@@ -5,6 +5,7 @@ on:
     branches: [ master ]
 
 jobs:
+  # ----------- Линтер -----------
   lint:
     runs-on: self-hosted
     steps:
@@ -14,6 +15,7 @@ jobs:
       - name: Run linter
         run: flake8 app/ tests/
 
+  # ----------- Тесты -----------
   test:
     runs-on: self-hosted
     needs: lint
@@ -30,6 +32,7 @@ jobs:
       - name: Run tests
         run: pytest --maxfail=1 --disable-warnings -q
 
+  # ----------- Сборка Docker -----------
   build-docker:
     runs-on: self-hosted
     needs: test
@@ -38,6 +41,7 @@ jobs:
       - name: Build Docker image (no cache)
         run: docker build --no-cache -t finance_app:latest .
 
+  # ----------- Деплой -----------
   deploy:
     runs-on: self-hosted
     needs: build-docker
@@ -46,5 +50,4 @@ jobs:
         run: |
           docker stop finance_app || true
           docker rm finance_app || true
-          docker rmi finance_app:latest || true
           docker run -d --name finance_app -p 8000:8000 finance_app:latest
