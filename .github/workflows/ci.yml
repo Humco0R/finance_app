@@ -5,9 +5,20 @@ on:
     branches: [ master ]
 
 jobs:
+  # ----------------- Линтер -----------------
+  lint:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install flake8
+        run: pip install flake8
+      - name: Run linter
+        run: flake8 app/ tests/
+
+  # ----------------- Тесты -----------------
   test:
     runs-on: self-hosted
-
+    needs: lint
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python
@@ -21,14 +32,22 @@ jobs:
       - name: Run tests
         run: pytest --maxfail=1 --disable-warnings -q
 
-  deploy:
+  # ----------------- Docker -----------------
+  build-docker:
     runs-on: self-hosted
     needs: test
     steps:
       - uses: actions/checkout@v3
-      - name: Deploy app locally
+      - name: Build Docker image
+        run: docker build -t finance_app:latest .
+
+  # ----------------- Деплой -----------------
+  deploy:
+    runs-on: self-hosted
+    needs: build-docker
+    steps:
+      - name: Deploy Docker container
         run: |
-          cd /home/vboxuser/finance_app
-          git pull
-          pkill -f main.py || true
-          nohup python3 app/main.py &
+          docker stop finance_app || true
+          docker rm finance_app || true
+          docker run -d --name finance_app -p 8000:8000 finance_app:latest
